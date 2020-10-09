@@ -1,10 +1,5 @@
 import * as admin from 'firebase-admin';
 import * as superagent from 'superagent';
-import * as express from 'express'
-
-
-
-
 
 export async function exeLatestTotalsToDb(): Promise<boolean> {
     try {
