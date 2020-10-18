@@ -1,9 +1,8 @@
-import * as admin from 'firebase-admin'
 import { Request, Response } from 'express';
+import admin = require('firebase-admin');
 import * as superagent from 'superagent';
 import { invalidTokenFailure, unavailableDataFailure } from './failure'
-
-
+import * as config from './env'
 
 
 export async function world(req: Request, res: Response) {
@@ -17,33 +16,40 @@ export async function world(req: Request, res: Response) {
         res.status(404).send(unavailableDataFailure('cases'))
         return
     }
-    const value = totalsData?.data.confirmed
-    const date = totalsData?.date
+    const data = totalsData?.data
+    //const date = totalsData?.date
     res.send([{
+        data
+/*
         cases: value,
         date: date
+        */
     }])
 }
 
 export async function country(req: Request, res: Response) {
-    const country = req.query.country;
+    const cntry = req.query.country||req.body.country;
+   //const cntry= req.body.country
+ console.log('Country value is: '+cntry);
     try {
-        const data =await fetFromApiWithCountry(country);  
+        const data = await fetchFromApiWithCountry(cntry);  
         if (data === undefined) {
          console.error('Parsing from remote api failed!')
+         res.status(404).send("Parsing from remote api failed")
          return;
      }
      res.send(data);
     }catch(e){
-        res.status(404).send(unavailableDataFailure('country'))
+        res.status(404).send("No data found!")
         return;
     }
     
 }
 
 
-async function fetFromApiWithCountry(country:any): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
-    const apiUrl = 'https://covid19.mathdro.id/api/countries/${country}'
+async function fetchFromApiWithCountry(cntry:any): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
+    const apiUrl =  config.apiUrl+'countries/'+cntry
+   console.log("apiUrl is: "+apiUrl);
     const res = await superagent.get(apiUrl)
     if (res.text === undefined) {
         console.error(`Fetch data from api failed: ${apiUrl}`)

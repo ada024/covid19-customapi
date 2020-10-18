@@ -1,10 +1,8 @@
-
 export function badRequestFailure () {
     return {
         error: {
-            code: 4001,
-            message: 'Bad request',
-            description: `The resone could be wrong parameter`
+            code: 1000,
+            message: 'Bad request'
         }
     }
 }
@@ -33,7 +31,7 @@ export function invalidTokenFailure() {
     return {
         error: {
             code: 4001,
-            message: 'Invalid Credentials',
+            message: 'Invalid Credentials'
         }
     }
 }
@@ -41,7 +39,7 @@ export function invalidTokenFailure() {
 export function unavailableDataFailure(api: string) {
     return {
         error: {
-            code: 4000,
+            code: 4002,
             message: 'No data found',
             description: `No data was found for ${api} api`
         }

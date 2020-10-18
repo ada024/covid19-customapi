@@ -7,3 +7,5 @@ typings/
 
 # Node.js dependency directory
 node_modules/
+rest_api/
+src/env.ts
