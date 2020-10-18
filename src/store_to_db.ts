@@ -1,9 +1,10 @@
 import * as admin from 'firebase-admin';
 import * as superagent from 'superagent';
+import * as config from './env'
 
 export async function exeLatestTotalsToDb(): Promise<boolean> {
     try {
-        const data = await fetDataFromApi()
+        const data = await fetchDataFromApi()
         if (data === undefined) {
             console.error('Parsing from remote api failed!')
             return false
@@ -19,8 +20,8 @@ export async function exeLatestTotalsToDb(): Promise<boolean> {
 }
 
 
-async function fetDataFromApi(): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
-    const apiUrl = 'https://covid19.mathdro.id/api'
+async function fetchDataFromApi(): Promise<{ data: { confirmed: number, deaths: number, recovered: number, active: number }, date: string } | undefined> {
+    const apiUrl = config.apiUrl;
     const res = await superagent.get(apiUrl)
     if (res.text === undefined) {
         console.error(`Fetch data from api failed: ${apiUrl}`)
